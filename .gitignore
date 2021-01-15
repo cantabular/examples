@@ -1,0 +1,5 @@
+# Microsoft Visual Studio Code working dir
+.vscode
+
+# JetBrains GoLand IDE config
+.idea
