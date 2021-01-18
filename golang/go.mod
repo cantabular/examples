@@ -1,3 +1,3 @@
-module github.com/sensiblecodeio/cantabular-examples
+module github.com/cantabular/examples
 
 go 1.15

@@ -1,4 +1,4 @@
-# cantabular-examples
+# Cantabular examples
 
 This public repository contains code examples for interacting with Cantabular.
 
