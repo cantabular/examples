@@ -4,6 +4,11 @@
 // The API can also be explored using an interactive IDE at
 // https://api.ireland-census-preview.cantabular.com/graphql
 
+//
+// Remove this line if using in the browser
+//
+const fetch = require('node-fetch');
+
 const ENDPOINT_URL = 'https://api.ireland-census-preview.cantabular.com/graphql';
 const DATASET = 'Ireland-1911-preview';
 
@@ -92,3 +97,5 @@ function main() {
     console.log(data);
   });
 }
+
+main()
