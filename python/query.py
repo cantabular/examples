@@ -19,14 +19,13 @@ import os
 import sys
 import itertools
 import csv
+from argparse import ArgumentParser
 import requests
-
-ENDPOINT_URL = "http://localhost:8492/graphql"
 
 GRAPHQL_QUERY = """
 {
- dataset(name: "Example") {
-  table(variables: ["city", "siblings"]) {
+ dataset(name: "%s") {
+  table(variables: ["%s"]) {
    dimensions {
     count
     variable {
@@ -51,9 +50,12 @@ def main():
     Perform a GraphQL query and handle response.
 
     Query the Cantabular extended API, verify and parse the response
-    and print the rows containing in the table in CSV format.
+    and print the rows contained in the table in CSV format.
     """
-    http_resp = requests.post(ENDPOINT_URL, data={"query": GRAPHQL_QUERY})
+    args = parse_arguments()
+
+    query = GRAPHQL_QUERY % (args.dataset, '", "'.join(args.variables))
+    http_resp = requests.post(args.base_url, data={"query": query})
     http_resp.raise_for_status()
 
     resp = http_resp.json()
@@ -88,6 +90,35 @@ def main():
         columns = [c["label"] for c in cats]
         columns.append(table["values"][i])
         writer.writerow(columns)
+
+
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = ArgumentParser(description="Query the Cantabular extended API using the GraphQL "
+                            "endpoint. Verify and parse the response and print the rows contained "
+                            "in the table in CSV format.")
+
+    # Positional arguments
+    parser.add_argument("base_url",
+                        metavar="URL",
+                        type=str,
+                        help="Cantabular GraphQL base URL including port "
+                             "e.g. http://localhost:8492/graphql")
+
+    parser.add_argument("dataset",
+                        metavar="Dataset",
+                        type=str,
+                        help="Name of dataset to use in query")
+
+    parser.add_argument("variables",
+                        metavar="Variables",
+                        nargs="+",
+                        type=str,
+                        help="Names of variables to use in query. At least one variable name "
+                        "must be supplied. A single rule variable may be specified. If a rule "
+                        "variable is specified then it must be the first variable.")
+
+    return parser.parse_args()
 
 
 if __name__ == "__main__":
