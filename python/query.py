@@ -19,13 +19,14 @@ import os
 import sys
 import itertools
 import csv
+import json
 from argparse import ArgumentParser
 import requests
 
 GRAPHQL_QUERY = """
-{
- dataset(name: "%s") {
-  table(variables: ["%s"]) {
+query($dataset: String!, $variables: [String!]!) {
+ dataset(name: $dataset) {
+  table(variables: $variables) {
    dimensions {
     count
     variable {
@@ -54,8 +55,12 @@ def main():
     """
     args = parse_arguments()
 
-    query = GRAPHQL_QUERY % (args.dataset, '", "'.join(args.variables))
-    http_resp = requests.post(args.base_url, data={"query": query})
+    graphql_variables = json.dumps({
+        "dataset": args.dataset,
+        "variables": args.variables,
+    })
+    http_resp = requests.post(args.base_url, data={"query": GRAPHQL_QUERY,
+                                                   "variables": graphql_variables})
     http_resp.raise_for_status()
 
     resp = http_resp.json()
