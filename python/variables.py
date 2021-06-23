@@ -81,7 +81,8 @@ def main():
     print("")
     print("OTHER VARIABLES")
     print("---------------")
-    for variable in variables - rule_variables:
+    non_rule_variables = variables - rule_variables
+    for variable in non_rule_variables:
         print(variable)
 
 
@@ -97,7 +98,7 @@ def parse_arguments():
     parser.add_argument("base_url",
                         metavar="URL",
                         type=str,
-                        help="Cantabular GraphQL base URL including port "
+                        help="Cantabular extended API base URL "
                              "e.g. http://localhost:8492/graphql")
 
     parser.add_argument("dataset",

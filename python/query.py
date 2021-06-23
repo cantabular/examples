@@ -51,7 +51,7 @@ def main():
     Perform a GraphQL query and handle response.
 
     Query the Cantabular extended API, verify and parse the response
-    and print the rows contained in the table in CSV format.
+    and print the rows of the table in CSV format.
     """
     args = parse_arguments()
 
@@ -100,14 +100,14 @@ def main():
 def parse_arguments():
     """Parse command line arguments."""
     parser = ArgumentParser(description="Query the Cantabular extended API using the GraphQL "
-                            "endpoint. Verify and parse the response and print the rows contained "
-                            "in the table in CSV format.")
+                            "endpoint. Verify and parse the response and print the rows of "
+                            "the table in CSV format.")
 
     # Positional arguments
     parser.add_argument("base_url",
                         metavar="URL",
                         type=str,
-                        help="Cantabular GraphQL base URL including port "
+                        help="Cantabular extended API base URL "
                              "e.g. http://localhost:8492/graphql")
 
     parser.add_argument("dataset",
@@ -120,8 +120,8 @@ def parse_arguments():
                         nargs="+",
                         type=str,
                         help="Names of variables to use in query. At least one variable name "
-                        "must be supplied. A single rule variable may be specified. If a rule "
-                        "variable is specified then it must be the first variable.")
+                        "must be supplied. You can supply at most one rule variable which must "
+                        "be first if present.")
 
     return parser.parse_args()
 

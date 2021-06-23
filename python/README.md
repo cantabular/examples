@@ -4,7 +4,7 @@ The API is powered by [GraphQL](https://graphql.org/) which allows users to requ
 
 The user is presented with a [GraphiQL](https://github.com/graphql/graphiql) session when the API is accessed via a web browser. GraphiQL is the GraphQL integrated development environment (IDE).
 
-Requests to the API via other means return reponses in GraphQL format, which is a little like JSON.
+You can write queries in the GraphQL query language and submit these to the API URL. The responses will be in JSON format.
 
 This repository provides some examples on accessing the API with Python.
 
@@ -18,11 +18,17 @@ They should be used with `Python 3` and have a dependency on the `requests` libr
 pip3 install requests
 ```
 
+You can see help text by running any of the scripts with a `-h` flag e.g.:
+
+```
+python3 variables.py -h
+```
+
 ### `variables.py`
 
-`variables.py` is used to identify the variables associated with a specific dataset. It constructs a GraphQL query using a user-supplied base URL and dataset name and prints the names of all the available variables. The variables are separated into **rule variables** and other variables. Rule variables are special variables that are used in rule based redaction of categories when cross tabulations are generated.
+`variables.py` prints out all the variables in a dataset available for queries. The program separates the output into **rule variables** and the remainder. A rule variable is one which Cantabular uses for per category publication according to disclosure control rules.
 
-The script takes 2 parameters. The first is the base URL for the GraphQL endpoint, whilst the second is the name of the dataset. This example lists the variables for a locally hosted dataset called `Example`:
+This example lists the variables for a locally hosted dataset called `Example`:
 
 ```
 > python3 variables.py http://localhost:8492/graphql Example
@@ -42,8 +48,7 @@ sex
 
 `query.py` is used to perform cross tabulations and print the resulting table in CSV format. It constructs a GraphQL query using a user-supplied base URL, dataset name and variable list.
 
-
-The script takes at least 3 parameters. The first is the base URL for the GraphQL endpoint, whilst the second is the name of the dataset. All subsequent parameters are treated as the names of query variables. At most one rule variable can be specified and this must be the first supplied variable. This example performs a cross tabulation for a locally hosted dataset called `Example` using the variables `country` and `siblings_3`:
+This example performs a cross tabulation for a locally hosted dataset called `Example` using the variables `country` and `siblings_3`:
 
 ```
 > python3 query.py http://localhost:8492/graphql Example country siblings_3
