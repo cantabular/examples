@@ -1,0 +1,23 @@
+{
+  "name": "cantabular-api-js-example",
+  "version": "0.1.0",
+  "description": "Example of using Cantabular's GraphQL API from JavaScript",
+  "main": "main.js",
+  "scripts": {
+    "example": "node main.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cantabular/examples.git"
+  },
+  "author": "Mike Thompson",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/cantabular/examples/issues"
+  },
+  "homepage": "https://github.com/cantabular/examples#readme",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
