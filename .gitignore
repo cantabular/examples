@@ -3,3 +3,6 @@
 
 # JetBrains GoLand IDE config
 .idea
+
+# Executables created by go build ./cmd/program_name
+/golang/cantabular-query-simple
