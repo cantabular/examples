@@ -6,3 +6,4 @@
 
 # Executables created by go build ./cmd/program_name
 /golang/cantabular-query-simple
+/golang/cantabular-query-streamed
