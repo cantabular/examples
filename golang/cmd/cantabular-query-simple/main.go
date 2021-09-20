@@ -12,29 +12,20 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-// This example demonstrates how tabulated data returned via a GraphQL request
-// may be processed.
 //
-// 1. Makes an HTTP request to the /graphql endpoint of Cantabular's extended
-//    API.
-// 2. Parses the JSON-encoded response and converts it from "row major order"
-// 3. Outputs the query in CSV format to standard output.
-//
-// To run:
-//
-// ```
-// go run .
-// ```
+// For function see description of main() method.
 package main
 
 import (
+	"bytes"
 	"encoding/csv"
 	"encoding/json"
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
-	"net/url"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
@@ -131,13 +122,10 @@ func (t Table) Header() []string {
 	return append(result, "count")
 }
 
-const (
-	EndpointUrl = "http://localhost:8492/graphql"
-
-	GraphQLQuery = `
-{
- dataset(name: "Example") {
-  table(variables: ["city", "siblings"]) {
+const graphQLQuery = `
+query($dataset: String!, $variables: [String!]!, $filters: [Filter!]) {
+ dataset(name: $dataset) {
+  table(variables: $variables, filters: $filters) {
    dimensions {
     count
     variable {
@@ -153,13 +141,47 @@ const (
    error
   }
  }
-}
-	`
-)
+}`
 
+var apiUrl = flag.String("u", "http://localhost:8492/graphql",
+	"Extended API URL")
+
+func init() {
+	const usage = `Usage: %s <dataset-name> <var> [<var> ...]
+
+Writes table output to stdout as CSV.
+Exit code is one on error and errors are reported to stderr.
+
+Options:
+`
+	flag.Usage = func() {
+		_, _ = fmt.Fprintf(flag.CommandLine.Output(), usage, filepath.Base(os.Args[0]))
+		flag.PrintDefaults()
+	}
+}
+
+// This example demonstrates how tabulated data returned via a GraphQL request
+// may be processed in the simplest way possible using decoding into a Go type.
+// See usage above or run program for help.
 func main() {
-	// Make an HTTP POST request containing the GraphQL query.
-	resp, err := http.PostForm(EndpointUrl, url.Values{"query": {GraphQLQuery}})
+	if flag.Parse(); len(flag.Args()) < 2 {
+		flag.Usage()
+		os.Exit(1)
+	}
+
+	var b bytes.Buffer
+	enc := json.NewEncoder(&b)
+	if err := enc.Encode(map[string]interface{}{
+		"query": graphQLQuery,
+		"variables": map[string]interface{}{
+			"dataset":   flag.Arg(0),
+			"variables": flag.Args()[1:],
+		},
+	}); err != nil {
+		log.Fatalf("Error encoding JSON request body: %s", err)
+	}
+
+	resp, err := http.Post(*apiUrl, "application/json", &b)
 	if err != nil {
 		log.Fatal(err)
 	}
