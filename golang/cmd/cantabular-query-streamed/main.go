@@ -200,7 +200,7 @@ func decodeValues(dec jsonstream.Decoder, dims table.Dimensions, w io.Writer) {
 		}
 	}()
 	// construct the CSV header and write it
-	columns := make([]string, 0, len(dims))
+	columns := make([]string, 0, len(dims)+1)
 	for _, d := range dims {
 		columns = append(columns, d.Variable.Label)
 	}
